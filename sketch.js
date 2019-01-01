@@ -1,5 +1,6 @@
 let time = 0;
-let wave = [];
+let wavey = [];
+let wavex = [];
 let n = 0;
 let radius = 0;
 let offset = 200;
@@ -7,9 +8,7 @@ let speedSlider;
 let harmonicsSlider;
 
 function setup(){
-  // createCanvas(1000,600);
   createCanvas(windowWidth, windowHeight);
-
   speedSlider = createSlider(0, 10, 1);
   speedSlider.position(20, 450);
   harmonicsSlider = createSlider(1, 100, 10);
@@ -48,18 +47,26 @@ for (let i = 1; i <= harmonicsSlider.value(); i+=2) {
 	  prevy = y+prevy;
 
 }
-  wave.unshift(prevy);
+  wavey.unshift(prevy);
+  wavex.unshift(prevx);
+
 
   line(prevx,prevy,radius+offset,prevy);
 
   translate(radius+offset,0);
-  for (let i = 0; i < wave.length; i++) {
+  for (let i = 0; i < wavey.length; i++) {
   	stroke(0,255,0);
-  	point(i,wave[i]);
+  	point(i,wavey[i]);
+  }
+  translate(-(radius+offset),0);
+  for (let i = 0; i < wavey.length; i++) {
+    stroke(255,0,0);
+    point(wavex[i],wavey[i]);
   }
 
-  if(wave.length > windowWidth){
-  	wave.pop();
+  if(wavex.length > windowWidth){
+  	wavex.pop();
+    wavey.pop();
   }
   time+=speedSlider.value()/100;
 }
