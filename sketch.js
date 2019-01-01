@@ -8,13 +8,18 @@ let speedSlider;
 let harmonicsSlider;
 
 function setup(){
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(windowWidth, 600);
   speedSlider = createSlider(0, 10, 1);
   speedSlider.position(20, 450);
   harmonicsSlider = createSlider(1, 100, 10);
   harmonicsSlider.position(20, 480);
+  var reset = createButton("reset");
+  reset.mousePressed(resetSketch);
 }
-
+function resetSketch(){
+  wavex = [];
+  wavey = [];
+}
 function draw(){
   background(0);
   stroke(255);
@@ -30,23 +35,23 @@ function draw(){
   let prevx = 0;
   let prevy = 0;
 
-for (let i = 1; i <= harmonicsSlider.value(); i+=2) {
-	  n=i;
-	  radius = 100*(4/(n*PI));
-	  x = radius * cos(n*time);
-	  y = radius * sin(n* time);
-	  fill(255);
-	  ellipse(prevx,prevy,5);
-	  noFill(255);
-	  stroke(255);
-	  ellipse(prevx,prevy,radius * 2);
-	  stroke(0,255,0);
-	  line(prevx,prevy,prevx+x,prevy+y);
+  for (let i = 1; i <= harmonicsSlider.value(); i+=2) {
+    n=i;
+    radius = 100*(4/(n*PI));
+    x = radius * cos(n*time);
+    y = radius * sin(n* time);
+    fill(255);
+    ellipse(prevx,prevy,5);
+    noFill(255);
+    stroke(255);
+    ellipse(prevx,prevy,radius * 2);
+    stroke(0,255,0);
+    line(prevx,prevy,prevx+x,prevy+y);
 
-	  prevx = x+prevx;
-	  prevy = y+prevy;
+    prevx = x+prevx;
+    prevy = y+prevy;
 
-}
+  }
   wavey.unshift(prevy);
   wavex.unshift(prevx);
 
@@ -54,19 +59,19 @@ for (let i = 1; i <= harmonicsSlider.value(); i+=2) {
   line(prevx,prevy,radius+offset,prevy);
   translate(radius+offset,0);
   for (let i = 0; i < wavey.length; i++) {
-  	stroke(0,255,0);
-  	point(i,wavey[i]);
+    stroke(0,255,0);
+    point(i,wavey[i]);
   }
   translate(-(radius+offset),0);
   beginShape();
-    for (let i = 0; i < wavey.length; i++) {
-      stroke(255,0,0);
-      vertex(wavex[i],wavey[i]);
-    }
+  for (let i = 0; i < wavey.length; i++) {
+    stroke(255,0,0);
+    vertex(wavex[i],wavey[i]);
+  }
   endShape();
 
   if(wavex.length > windowWidth){
-  	wavex.pop();
+    wavex.pop();
     wavey.pop();
   }
   time+=speedSlider.value()/100;
