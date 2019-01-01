@@ -7,10 +7,12 @@ let speedSlider;
 let harmonicsSlider;
 
 function setup(){
-  createCanvas(1000,600);
+  // createCanvas(1000,600);
+  createCanvas(windowWidth, windowHeight);
+
   speedSlider = createSlider(0, 10, 1);
   speedSlider.position(20, 450);
-  harmonicsSlider = createSlider(0, 100, 10);
+  harmonicsSlider = createSlider(1, 100, 10);
   harmonicsSlider.position(20, 480);
 }
 
@@ -56,7 +58,7 @@ for (let i = 1; i <= harmonicsSlider.value(); i+=2) {
   	point(i,wave[i]);
   }
 
-  if(wave.length > 700){
+  if(wave.length > windowWidth){
   	wave.pop();
   }
   time+=speedSlider.value()/100;
