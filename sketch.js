@@ -52,17 +52,18 @@ for (let i = 1; i <= harmonicsSlider.value(); i+=2) {
 
 
   line(prevx,prevy,radius+offset,prevy);
-
   translate(radius+offset,0);
   for (let i = 0; i < wavey.length; i++) {
   	stroke(0,255,0);
   	point(i,wavey[i]);
   }
   translate(-(radius+offset),0);
-  for (let i = 0; i < wavey.length; i++) {
-    stroke(255,0,0);
-    point(wavex[i],wavey[i]);
-  }
+  beginShape();
+    for (let i = 0; i < wavey.length; i++) {
+      stroke(255,0,0);
+      vertex(wavex[i],wavey[i]);
+    }
+  endShape();
 
   if(wavex.length > windowWidth){
   	wavex.pop();
