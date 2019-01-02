@@ -1,6 +1,8 @@
 let time = 0;
 let wavey = [];
 let wavex = [];
+let waves = [];
+let tempWaves = [];
 let n = 0;
 let radius = 0;
 let offset = 200;
@@ -16,9 +18,12 @@ function setup(){
   harmonicsSlider.position(20, 480);
   var reset = createButton("reset");
   reset.mousePressed(resetSketch);
-  dropdown = createSelect(); // or create dropdown?
+  dropdown = createSelect();
   dropdown.option('square','square');
   dropdown.option('sawtooth','sawtooth');
+  dropdown.option('triangle','triangle');
+  checkbox = createCheckbox('Show components');
+
 }
 function resetSketch(){
   wavex = [];
@@ -53,11 +58,27 @@ function draw(){
       }
       drawSineComponents(n,radius);
     }
+    break;
+    case "triangle":
+    for (let i = 1; i <= harmonicsSlider.value(); i+=2) {
+      n=i;
+      radius = 10*(8/((n*PI)^2));
+      if(i%2){
+        radius=-radius;
+      }
+      drawSineComponents(n,radius);
+    }
   }
 
 
   wavey.unshift(prevy);
   wavex.unshift(prevx);
+
+  if (checkbox.checked()) {
+    waves.unshift(tempWaves);
+    tempWaves=[];
+  }
+
 
 
   line(prevx,prevy,radius+offset,prevy);
@@ -65,7 +86,14 @@ function draw(){
   for (let i = 0; i < wavey.length; i++) {
     stroke(0,255,0);
     point(i,wavey[i]);
+      if(checkbox.checked() && waves[i]){
+        for (var j = 0; j < (waves[i].length); j++) {
+          stroke(127,127,0);
+          point(i,waves[i][j]);
+        }
+    }
   }
+
   translate(-(radius+offset),0);
   beginShape();
   for (let i = 0; i < wavey.length; i++) {
@@ -77,6 +105,9 @@ function draw(){
   if(wavex.length > windowWidth){
     wavex.pop();
     wavey.pop();
+    if(checkbox.checked()){
+      waves.pop();
+    }
   }
   time+=speedSlider.value()/100;
 }
@@ -94,4 +125,7 @@ function drawSineComponents(n,radius){
 
   prevx = x+prevx;
   prevy = y+prevy;
+  if (checkbox.checked()) {
+    tempWaves.unshift(y);
+  }
 }
