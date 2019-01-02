@@ -6,7 +6,8 @@ let radius = 0;
 let offset = 200;
 let speedSlider;
 let harmonicsSlider;
-
+let prevx = 0;
+let prevy = 0;
 function setup(){
   createCanvas(windowWidth, 600);
   speedSlider = createSlider(0, 10, 1);
@@ -15,6 +16,9 @@ function setup(){
   harmonicsSlider.position(20, 480);
   var reset = createButton("reset");
   reset.mousePressed(resetSketch);
+  dropdown = createSelect(); // or create dropdown?
+  dropdown.option('square','square');
+  dropdown.option('sawtooth','sawtooth');
 }
 function resetSketch(){
   wavex = [];
@@ -27,31 +31,31 @@ function draw(){
   textSize(20);
   text("Speed",speedSlider.x+speedSlider.width+5,speedSlider.y +5 );
   text("Number of Harmonics",harmonicsSlider.x+harmonicsSlider.width+5,harmonicsSlider.y+5);
-
-
   translate(250,200);
 
-
-  let prevx = 0;
-  let prevy = 0;
-
-  for (let i = 1; i <= harmonicsSlider.value(); i+=2) {
-    n=i;
-    radius = 100*(4/(n*PI));
-    x = radius * cos(n*time);
-    y = radius * sin(n* time);
-    fill(255);
-    ellipse(prevx,prevy,5);
-    noFill(255);
-    stroke(255);
-    ellipse(prevx,prevy,radius * 2);
-    stroke(0,255,0);
-    line(prevx,prevy,prevx+x,prevy+y);
-
-    prevx = x+prevx;
-    prevy = y+prevy;
-
+  prevx = 0;
+  prevy = 0;
+ // let series = "sawtooth";
+  switch(dropdown.selected()) {
+    case "square":
+    for (let i = 1; i <= harmonicsSlider.value(); i+=2) {
+      n=i;
+      radius = 100*(4/(n*PI));
+      drawSineComponents(n,radius);
+    }
+      break;
+    case "sawtooth":
+    for (let i = 1; i <= harmonicsSlider.value(); i++) {
+      n=i;
+      radius = 100*(2/(n*PI));
+      if(i%2){
+        radius=-radius;
+      }
+      drawSineComponents(n,radius);
+    }
   }
+
+
   wavey.unshift(prevy);
   wavex.unshift(prevx);
 
@@ -75,4 +79,19 @@ function draw(){
     wavey.pop();
   }
   time+=speedSlider.value()/100;
+}
+
+function drawSineComponents(n,radius){
+  x = radius * cos(n*time);
+  y = radius * sin(n* time);
+  fill(255);
+  ellipse(prevx,prevy,5);
+  noFill(255);
+  stroke(255);
+  ellipse(prevx,prevy,radius * 2);
+  stroke(0,255,0);
+  line(prevx,prevy,prevx+x,prevy+y);
+
+  prevx = x+prevx;
+  prevy = y+prevy;
 }
