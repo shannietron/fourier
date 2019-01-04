@@ -67,7 +67,6 @@ function draw(){
       if(i%2){
         radius=-radius;
       }
-      console.log(n,radius);
       drawSineComponents(n,radius);
     }
   }
