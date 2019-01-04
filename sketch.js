@@ -60,12 +60,14 @@ function draw(){
     }
     break;
     case "triangle":
-    for (let i = 1; i <= harmonicsSlider.value(); i+=2) {
-      n=i;
+    for (let i = 0; i <= harmonicsSlider.value(); i++) {
+      n=(2*i)+1;
+
       radius = 10*(8/((n*PI)^2));
       if(i%2){
         radius=-radius;
       }
+      console.log(n,radius);
       drawSineComponents(n,radius);
     }
   }
